@@ -23,8 +23,10 @@ namespace Consumer
 				{
 					GroupId = "grupo-curso",
 					BootstrapServers = _bootstrapserver,
-					EnableAutoCommit = false,
-					EnablePartitionEof = true,
+					EnableAutoCommit = false, //habilita para dar commit manual
+					EnablePartitionEof = true, //Notifica que chegou ao fim da partição
+					AutoOffsetReset = AutoOffsetReset.Earliest//lê a partir do mais novo
+					//AutoOffsetReset = AutoOffsetReset.Latest //lê todos
 				};
 
 				using var consumer = new ConsumerBuilder<string, T>(config)

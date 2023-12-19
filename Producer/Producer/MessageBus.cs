@@ -15,6 +15,11 @@ namespace Producer
 		{
 			var config = new ProducerConfig
 			{
+				//Acknowledgements
+				Acks = Acks.None,//Não aguarda confirmação do lado do broker
+				//Acks = Acks.Leader,//Aguarda o broaker leader confirmar o recebimento
+				//Acks = Acks.All,//aguarda todos os nodes confirmar
+
 				BootstrapServers = _bootstrapserver,
 			};
 
