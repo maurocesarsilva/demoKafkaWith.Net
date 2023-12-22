@@ -1,16 +1,13 @@
 ﻿using Confluent.Kafka;
+using Confluent.Kafka.SyncOverAsync;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
 using DevStore.MessageBus.Serializador;
 
 namespace Consumer
 {
-	public class MessageBus
+	public class MessageBus(string bootstrapserver, string schemaRegistry)
 	{
-		private readonly string _bootstrapserver;
-
-		public MessageBus(string bootstrapserver)
-		{
-			_bootstrapserver = bootstrapserver;
-		}
 
 		public async Task ConsumerAsync<T>(
 			 string topic,
@@ -19,10 +16,17 @@ namespace Consumer
 		{
 			_ = Task.Factory.StartNew(async () =>
 			{
+				var schemaConfig = new SchemaRegistryConfig
+				{
+					Url = schemaRegistry
+				};
+
+				var schemaReg = new CachedSchemaRegistryClient(schemaConfig);
+
 				var config = new ConsumerConfig
 				{
 					GroupId = "grupo-curso",
-					BootstrapServers = _bootstrapserver,
+					BootstrapServers = bootstrapserver,
 					EnableAutoCommit = false, //habilita para dar commit manual
 					EnablePartitionEof = true, //Notifica que chegou ao fim da partição
 					AutoOffsetReset = AutoOffsetReset.Earliest//lê a partir do mais novo
@@ -30,7 +34,7 @@ namespace Consumer
 				};
 
 				using var consumer = new ConsumerBuilder<string, T>(config)
-					.SetValueDeserializer(new Deserializer<T>())
+					.SetValueDeserializer(new AvroDeserializer<T>(schemaReg).AsSyncOverAsync())
 					.Build();
 
 				consumer.Subscribe(topic);

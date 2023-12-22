@@ -1,0 +1,15 @@
+﻿{
+    "namespace": "Producer.Avros",
+    "type": "record",
+    "name": "Curso",
+    "fields": [
+        {
+            "name": "Name",
+            "type": "string"
+        },
+        {
+            "name": "Descricao",
+            "type": "string"
+        }
+    ]
+}

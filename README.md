@@ -30,3 +30,6 @@ consumir mensagens:
 - Confluent.Kafka
 - Confluent.SchemaRegistry.Serdes.Avro
 
+# Gerar arquivos avros
+- avrogen -s Curso.avsc .
+

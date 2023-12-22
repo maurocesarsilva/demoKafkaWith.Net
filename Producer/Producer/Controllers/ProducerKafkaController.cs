@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Producer.Avros;
 
 namespace Producer.Controllers
 {
@@ -13,10 +14,10 @@ namespace Producer.Controllers
 			_messageBus = messageBus;
 		}
 
-		[HttpGet]
-		public async Task<IActionResult> Get()
+		[HttpPost]
+		public async Task<IActionResult> Post([FromBody] Curso obj)
 		{
-			await _messageBus.ProducerAsync("topicoTeste", new { Name = "Topico publicado" });
+			await _messageBus.ProducerAsync("topicoTeste", obj);
 
 			return Ok();
 		}

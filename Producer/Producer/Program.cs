@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton(new MessageBus(builder.Configuration["MessageBus"]));
+builder.Services.AddSingleton(new MessageBus(builder.Configuration["MessageBus"], builder.Configuration["schemaRegistry"]));
 
 var app = builder.Build();
 

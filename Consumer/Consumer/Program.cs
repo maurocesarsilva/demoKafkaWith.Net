@@ -9,7 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton(new MessageBus(builder.Configuration["MessageBus"]));
+builder.Services.AddSingleton(new MessageBus(builder.Configuration["MessageBus"], builder.Configuration["schemaRegistry"]));
 builder.Services.AddHostedService<ServiceKafka>();
 
 var app = builder.Build();

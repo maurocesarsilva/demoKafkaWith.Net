@@ -1,18 +1,21 @@
 ﻿using Confluent.Kafka;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
 
 namespace Producer
 {
-	public class MessageBus
+	public class MessageBus(string bootstrapserver, string schemaRegistry)
 	{
-		private readonly string _bootstrapserver;
-
-		public MessageBus(string bootstrapserver)
-		{
-			_bootstrapserver = bootstrapserver;
-		}
-
 		public async Task ProducerAsync<T>(string topic, T message)
 		{
+			var schemaConfig = new SchemaRegistryConfig
+			{
+				Url = schemaRegistry
+			};
+
+			var schemaReg = new CachedSchemaRegistryClient(schemaConfig);
+
+
 			var config = new ProducerConfig
 			{
 				//Acknowledgements
@@ -20,14 +23,14 @@ namespace Producer
 				//Acks = Acks.Leader,//Aguarda o broaker leader confirmar o recebimento
 				//Acks = Acks.All,//aguarda todos os nodes confirmar
 
-				BootstrapServers = _bootstrapserver,
+				BootstrapServers = bootstrapserver,
 			};
 
 			var headers = new Dictionary<string, string>();
 			headers["transactionId"] = Guid.NewGuid().ToString();
 
 			var producer = new ProducerBuilder<string, T>(config)
-				.SetValueSerializer(new Serializer<T>())
+				.SetValueSerializer(new AvroSerializer<T>(schemaReg))
 				.Build();
 
 			var result = await producer.ProduceAsync(topic, new Message<string, T>
