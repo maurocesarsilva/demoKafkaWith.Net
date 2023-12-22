@@ -2,7 +2,6 @@
 using Confluent.Kafka.SyncOverAsync;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
-using DevStore.MessageBus.Serializador;
 
 namespace Consumer
 {

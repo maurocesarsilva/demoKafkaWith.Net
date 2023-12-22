@@ -13,8 +13,4 @@
 		<PackageReference Include="Confluent.Kafka" Version="1.9.2" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Serializador\" />
-	</ItemGroup>
-
 </Project>
